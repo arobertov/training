@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="technology">
+    <div class="container">
+        <div class="col-md-9 technology-left">
+            <div class="business">
+                <div class="design-bottom">
+                    <div class="business-left">
+                        <a href="#"><img src="{{ asset('upload/articles/'~article.path) }}" class="img-responsive" alt=""/></a>
+                    </div>
+                    <div class="business-right">
+                        <h2><a href="#">{{ article.title }}</a></h2>
+                        <div class="blog-poast-info">
+                            <ul>
+                                <li><i class="glyphicon glyphicon-user"> </i><a class="admin" href="#"> {{ article.publishedBy}} </a></li>
+                                <li><i class="glyphicon glyphicon-calendar"> </i>
+                                    {% if article.dateEdit is empty %}
+                                        {{ article.dateCreated|date('H:i/d/m/Y') }}
+                                    {% else %}
+                                        {{ article.dateEdit|date('H:i/d/m/Y') }}
+                                    {% endif %}
+                                </li>
+                                <li><i class="glyphicon glyphicon-comment"> </i><a class="p-blog" href="#">0 Коментара </a></li>
+                                {% if is_granted("ROLE_ADMIN") %}
+                                    <li><i class="glyphicon glyphicon-edit"> </i>
+                                        <a class="admin" href="{{ path('article_edit',{'id':article.id}) }}">
+                                            Редактирай
+                                        </a>
+                                    </li>
+                                    <li><i class="glyphicon glyphicon-remove-sign"> </i>
+                                        <a class="admin" href="{{ path('article_delete',{'id':article.id}) }}">
+                                           Изтрий
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <hr/>
+                        <p>{{ article.content|raw }}</p>
+
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="design-top">
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+            {% block sidebar %}
+                {{ include(':default:right-sidebar.html.twig') }}
+            {% endblock %}
+    </div>
+</div>
+{% endblock %}
+

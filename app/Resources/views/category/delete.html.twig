@@ -1,0 +1,27 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="col-md-5">
+            <div class="author-create">
+                {{ form_start(form) }}
+                <div class="alert alert-danger">
+                    <strong>Внимание!</strong> Това действие ще изтрие категорията.
+                </div>
+                <label class="author-create-label" for="author_name">Изтрий категорията</label>
+                {{ form_widget(form.name) }}
+                {{ form_errors(form.name) }}
+                <div class="form-button">
+                    {{ form_widget(form.save,{'label':'Изтрий','attr':{'class':'btn btn-danger'}}) }}
+                    <a class="btn btn-default" href="{{ path('author_create') }}">Отказ</a>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top: 3em">
+
+    </div>
+
+{% endblock %}
+

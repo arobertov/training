@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="article-form">
+            {{ form_start(form) }}
+            <fieldset>
+                <legend>Редактирай статия</legend>
+                <div class="col-md-4">
+                    <div class="article-form-item">
+                        {{ form_label(form.title) }}
+                        {{ form_widget(form.title) }}
+
+                        {{ form_label(form.path) }}
+                        {{ form_widget(form.path) }}
+
+                        {{ form_label(form.category) }}
+                        {{ form_widget(form.category) }}
+                        <p style="margin-top: 1em;">
+                            <a class="btn btn-default" href="{{ path('category_create') }}">
+                                Добави категория
+                            </a>
+                        </p>
+
+                        {{ form_label(form.writer) }}
+                        {{ form_widget(form.writer) }}
+                        <p style="margin-top: 1em;">
+                            <a class="btn btn-default" href="{{ path('author_create') }}">
+                                Добави автор
+                            </a>
+                        </p>
+                        {{ form_widget(form.enabled) }}
+                    </div>
+                </div>
+                {{ form_row(form._token) }}
+                <div class="col-md-8">
+                    <div class="article-form-item">
+                        {{ form_label(form.content) }}
+                        {{ form_widget(form.content) }}
+
+                        {{ form_widget(form.save) }}
+                    </div>
+                </div>
+
+
+            </fieldset>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}
+

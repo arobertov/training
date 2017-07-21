@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="col-md-5">
+        <div class="author-create">
+            {{ form_start(form) }}
+            <label class="author-create-label" for="author_name">Редактирай автор</label>
+            {{ form_widget(form.name) }}
+            {{ form_errors(form.name) }}
+            <div class="form-button">
+                {{ form_widget(form.save,{'label':'Редактирай','attr':{'class':'btn btn-warning'}}) }}
+                <a class="btn btn-default" href="{{ path('author_create') }}">Отказ</a>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+    <div style="margin-top: 3em">
+
+    </div>
+
+{% endblock %}
+
