@@ -26,6 +26,7 @@ from output_formatter import (
     format_validation_report,
     format_counts,
 )
+from diagram_generator import generate_diagram
 
 
 def main():
@@ -87,6 +88,11 @@ def main():
     print("\nValidating schedule...")
     result = validate(shifts, all_blocks)
     print(format_validation_report(result))
+
+    # Diagram
+    print("\nGenerating shift diagram...")
+    diagram_path = os.path.join(_ROOT, "output", "shift_diagram.png")
+    generate_diagram(shifts, segments=segments, output_path=diagram_path)
 
     return 0 if result.ok else 1
 

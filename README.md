@@ -11,7 +11,13 @@ A Python tool that reads a transit timetable CSV and produces a complete 24-hour
 
 ### Requirements
 
-- Python 3.10 or later (no external dependencies — uses stdlib only)
+- Python 3.10 or later
+- `matplotlib` — for generating the shift diagram PNG
+
+Install dependencies:
+```bash
+pip install matplotlib
+```
 
 ### Quick Start
 
@@ -33,6 +39,9 @@ src/
   shift_scheduler.py         — Assigns blocks to shifts
   validator.py               — Validates all schedule constraints
   output_formatter.py        — Formats output tables
+  diagram_generator.py       — Generates the Gantt-chart shift diagram (PNG)
+output/
+  shift_diagram.png          — Generated diagram (created at runtime)
 ```
 
 ### Input Data Format
@@ -77,6 +86,21 @@ The program prints:
 3. **Shift summary table** — compact overview of all shifts
 4. **Coverage matrix** — which shift covers each block of every route
 5. **Validation report** — confirms all constraints are satisfied
+6. **Shift diagram PNG** — saved to `output/shift_diagram.png`
+
+#### Gantt-Chart Diagram
+
+Running `python main.py` also generates a visual Gantt-chart diagram at `output/shift_diagram.png` (28 × ~16 inches, 150 DPI). It shows all routes on the Y-axis and time (4:00–1:00 next day) on the X-axis, split into two panels:
+
+- **Left panel**: 4:00–15:00
+- **Right panel**: 15:00–1:00 (next day)
+
+Color coding:
+- 🟢 **Morning (С)** shifts: green shades
+- 🟠 **Day (Д)** shifts: orange/yellow shades
+- 🔴 **Night (Н)** shifts: red/pink shades
+
+Route 101-evening is shown as row **114** and Route 102-evening as row **116**.
 
 #### Example shift diagram
 
