@@ -112,8 +112,8 @@ def _td_to_str(td: timedelta) -> str:
 # The Y-axis row labels and the route_ids that map to each row
 _ROUTE_DISPLAY_ORDER = [
     "100",
-    "101",    # maps to 101-morning
-    "102",    # maps to 102-morning
+    "101",    # maps to 101-morning + 101-evening
+    "102",    # maps to 102-morning + 102-evening
     "103",
     "104",
     "105",
@@ -122,14 +122,12 @@ _ROUTE_DISPLAY_ORDER = [
     "108",
     "109",
     "110",
-    "114",    # maps to 101-evening
-    "116",    # maps to 102-evening
 ]
 
 _DISPLAY_TO_ROUTE_IDS = {
     "100": ["100"],
-    "101": ["101-morning"],
-    "102": ["102-morning"],
+    "101": ["101-morning", "101-evening"],
+    "102": ["102-morning", "102-evening"],
     "103": ["103"],
     "104": ["104"],
     "105": ["105"],
@@ -138,8 +136,6 @@ _DISPLAY_TO_ROUTE_IDS = {
     "108": ["108"],
     "109": ["109"],
     "110": ["110"],
-    "114": ["101-evening"],
-    "116": ["102-evening"],
 }
 
 
@@ -271,20 +267,14 @@ def generate_diagram(
 
     n_routes = len(_ROUTE_DISPLAY_ORDER)
 
-    # Time range: panel 1 = 4:00–15:00, panel 2 = 15:00–25:00 (1:00 next day)
-    PANEL1_START = 4.0   # hours
-    PANEL1_END   = 15.0
-    PANEL2_START = 15.0
-    PANEL2_END   = 25.0  # 1:00 AM next day
+    # Time range: full diagram from 4:00 to 25:00 (1:00 next day)
+    DIAGRAM_START = 4.0   # hours
+    DIAGRAM_END   = 25.0  # 1:00 AM next day
 
-    panel1_span = PANEL1_END - PANEL1_START
-    panel2_span = PANEL2_END - PANEL2_START
-
-    # Figure: two subplots side by side, width ratio proportional to time span
-    fig, (ax1, ax2) = plt.subplots(
-        1, 2,
-        figsize=(28, max(10, n_routes * 0.85 + 2)),
-        gridspec_kw={"width_ratios": [panel1_span, panel2_span]},
+    # Figure: single axis spanning the full time range
+    fig, ax = plt.subplots(
+        1, 1,
+        figsize=(42, max(10, n_routes * 0.85 + 2)),
     )
     fig.patch.set_facecolor("#F5F5F5")
 
@@ -305,14 +295,14 @@ def generate_diagram(
         tick_positions = [h for h in range(int(t_start), int(t_end) + 1)]
         tick_labels = [f"{h % 24}:00" for h in tick_positions]
         ax.set_xticks(tick_positions)
-        ax.set_xticklabels(tick_labels, fontsize=7, rotation=45, ha="right")
+        ax.set_xticklabels(tick_labels, fontsize=9, rotation=45, ha="right")
         ax.tick_params(axis="x", which="both", bottom=True, top=True,
                        labeltop=True, labelbottom=False)
         ax.xaxis.set_ticks_position("top")
 
         # Y-axis: route labels
         ax.set_yticks([i * row_spacing for i in range(n_routes)])
-        ax.set_yticklabels(_ROUTE_DISPLAY_ORDER, fontsize=9, fontweight="bold")
+        ax.set_yticklabels(_ROUTE_DISPLAY_ORDER, fontsize=11, fontweight="bold")
         ax.tick_params(axis="y", left=True, right=False, length=0)
         ax.invert_yaxis()
 
@@ -339,7 +329,7 @@ def generate_diagram(
                     ax.text(
                         x, y_center - row_height / 2 - 0.05,
                         label,
-                        fontsize=5,
+                        fontsize=6.5,
                         ha="center", va="bottom",
                         color="#333333",
                         clip_on=True,
@@ -388,7 +378,7 @@ def generate_diagram(
                 ax.text(
                     label_x, label_y,
                     shift.shift_id,
-                    fontsize=5.5,
+                    fontsize=7,
                     ha="center", va="center",
                     color=text_color,
                     fontweight="bold",
@@ -401,16 +391,7 @@ def generate_diagram(
             spine.set_edgecolor("#AAAAAA")
             spine.set_linewidth(0.8)
 
-    _draw_panel(ax1, PANEL1_START, PANEL1_END)
-    _draw_panel(ax2, PANEL2_START, PANEL2_END)
-
-    # Titles
-    ax1.set_title("4:00 – 15:00", fontsize=10, fontweight="bold", pad=18)
-    ax2.set_title("15:00 – 1:00 (next day)", fontsize=10, fontweight="bold", pad=18)
-
-    # Remove y-axis labels from right panel (shared with left)
-    ax2.set_yticklabels([])
-    ax2.tick_params(axis="y", left=False)
+    _draw_panel(ax, DIAGRAM_START, DIAGRAM_END)
 
     # Legend for shift types
     legend_handles = [
@@ -435,7 +416,6 @@ def generate_diagram(
     )
 
     plt.tight_layout(rect=[0, 0.04, 1, 0.96])
-    plt.subplots_adjust(wspace=0.04)
 
     fig.savefig(output_path, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
     print(f"Diagram saved to: {output_path}")
