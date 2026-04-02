@@ -1,5 +1,0 @@
-RewriteEngine On
-RewriteCond %{HTTP_HOST} ^nature-blog.eu$ [OR]
-RewriteCond %{HTTP_HOST} ^www\.nature-blog.eu$
-RewriteCond %{REQUEST_URI} !^/web/app.php
-RewriteRule (.*) /web/$1

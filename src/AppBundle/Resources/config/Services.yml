@@ -1,4 +1,0 @@
-services:
-    appbundle.article.uploader:
-        class: AppBundle\Services\FileUploader
-        arguments: ["%appbundle_article_upload%"]
